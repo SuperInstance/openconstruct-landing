@@ -212,6 +212,7 @@ footer a{color:var(--fg)}
     <span style="background:rgba(0,255,136,.06);border:1px solid var(--border);color:var(--muted);padding:.3rem .8rem;border-radius:6px;font-size:.8rem;font-family:var(--mono)">Apache 2.0</span>
   </div>
   <p class="tagline">One framework. Any hardware. Any language. Open source under Apache 2.0.</p>
+  <a href="https://superinstance.ai" style="display:inline-block;margin-top:1rem;padding:.6rem 1.5rem;border-radius:8px;background:var(--accent);color:#0a0a0a;font-weight:700;font-size:.95rem;text-decoration:none;transition:transform .2s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">Try it live at superinstance.ai →</a>
 
   <div class="terminal" id="heroTerminal">
     <div class="terminal-bar">
@@ -236,7 +237,7 @@ footer a{color:var(--fg)}
     </div>
   </div>
 
-  <div class="countdown">Get started in <span id="countdown">60</span> seconds</div>
+  <div class="countdown">Get started in under a minute</div>
 </div>
 
 <!-- BUILD YOUR AGENT -->
@@ -408,16 +409,16 @@ Exits: aft → Nav Room, port → Galley, below → Engine Room</div>
   <div class="lang-grid">
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-rust"><span class="lang-emoji">🦀</span><div class="lang-info"><div class="lang-name">Rust</div><div class="lang-cmd">cargo add openconstruct</div></div><span class="lang-check">✓</span></a>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-python"><span class="lang-emoji">🐍</span><div class="lang-info"><div class="lang-name">Python</div><div class="lang-cmd">pip install openconstruct</div></div><span class="lang-check">✓</span></a>
-    <div class="lang-card" style="cursor:default"><span class="lang-emoji">🔷</span><div class="lang-info"><div class="lang-name">TypeScript</div><div class="lang-cmd">npm i openconstruct</div></div><span class="lang-check">✓</span></div>
+    <div class="lang-card" style="cursor:default;opacity:.7"><span class="lang-emoji">🔷</span><div class="lang-info"><div class="lang-name">TypeScript</div><div class="lang-cmd">npm i openconstruct</div></div><span class="lang-check" style="color:var(--muted);font-size:.65rem">Soon</span></div>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-go"><span class="lang-emoji">🔵</span><div class="lang-info"><div class="lang-name">Go</div><div class="lang-cmd">go get openconstruct</div></div><span class="lang-check">✓</span></a>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-java"><span class="lang-emoji">☕</span><div class="lang-info"><div class="lang-name">Java</div><div class="lang-cmd">Maven: openconstruct</div></div><span class="lang-check">✓</span></a>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-swift"><span class="lang-emoji">🍎</span><div class="lang-info"><div class="lang-name">Swift</div><div class="lang-cmd">SPM: openconstruct</div></div><span class="lang-check">✓</span></a>
-    <div class="lang-card" style="cursor:default"><span class="lang-emoji">🟣</span><div class="lang-info"><div class="lang-name">C#</div><div class="lang-cmd">dotnet add pkg</div></div><span class="lang-check">✓</span></div>
+    <div class="lang-card" style="cursor:default;opacity:.7"><span class="lang-emoji">🟣</span><div class="lang-info"><div class="lang-name">C#</div><div class="lang-cmd">dotnet add pkg</div></div><span class="lang-check" style="color:var(--muted);font-size:.65rem">Soon</span></div>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-ruby"><span class="lang-emoji">💎</span><div class="lang-info"><div class="lang-name">Ruby</div><div class="lang-cmd">gem install openconstruct</div></div><span class="lang-check">✓</span></a>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-zig"><span class="lang-emoji">⚡</span><div class="lang-info"><div class="lang-name">Zig</div><div class="lang-cmd">zig fetch openconstruct</div></div><span class="lang-check">✓</span></a>
-    <div class="lang-card" style="cursor:default"><span class="lang-emoji">⚙️</span><div class="lang-info"><div class="lang-name">C++</div><div class="lang-cmd">vcpkg: openconstruct</div></div><span class="lang-check">✓</span></div>
+    <div class="lang-card" style="cursor:default;opacity:.7"><span class="lang-emoji">⚙️</span><div class="lang-info"><div class="lang-name">C++</div><div class="lang-cmd">vcpkg: openconstruct</div></div><span class="lang-check" style="color:var(--muted);font-size:.65rem">Soon</span></div>
     <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-c"><span class="lang-emoji">🔧</span><div class="lang-info"><div class="lang-name">C</div><div class="lang-cmd">make install</div></div><span class="lang-check">✓</span></a>
-    <div class="lang-card" style="cursor:default"><span class="lang-emoji">🟠</span><div class="lang-info"><div class="lang-name">Kotlin</div><div class="lang-cmd">Gradle: openconstruct</div></div><span class="lang-check">✓</span></div>
+    <div class="lang-card" style="cursor:default;opacity:.7"><span class="lang-emoji">🟠</span><div class="lang-info"><div class="lang-name">Kotlin</div><div class="lang-cmd">Gradle: openconstruct</div></div><span class="lang-check" style="color:var(--muted);font-size:.65rem">Soon</span></div>
   </div>
 </section>
 
@@ -598,8 +599,7 @@ setTimeout(typeTerm,800);
 
 // === COUNTDOWN ===
 let cd=60;
-const cdEl=document.getElementById('countdown');
-setInterval(()=>{cd--;if(cd<0)cd=60;cdEl.textContent=cd},1000);
+// countdown removed — static message instead
 
 // === BUILDER ===
 let selHw='',selLang='',selSenses=new Set();
