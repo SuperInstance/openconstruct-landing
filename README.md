@@ -1,5 +1,12 @@
 # openconstruct-landing — Project Landing Page
 
+## 🔗 Live Demo
+
+- **Landing page:** https://superinstance.github.io/openconstruct-landing/
+- **Live vessel MUD:** https://superinstance.ai#vessel
+- **Demo gallery:** https://superinstance.ai/demos.html
+- **SuperInstance hub:** https://superinstance.ai
+
 Single-page landing site for [OpenConstruct](https://github.com/SuperInstance/OpenConstruct). Static HTML, no build step.
 
 ## What This Gives You
