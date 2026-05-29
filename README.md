@@ -23,3 +23,7 @@ Push to a GitHub Pages branch or serve from any static host.
 ## License
 
 MIT
+
+## Documentation
+
+- [OpenConstruct Documentation](https://github.com/SuperInstance/openconstruct-docs) — ecosystem-wide docs and guides
