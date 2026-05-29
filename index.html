@@ -41,6 +41,7 @@ nav a{color:var(--muted);transition:color .2s}nav a:hover{color:var(--fg);text-d
 .terminal-body .success{color:var(--accent)}
 .cursor{display:inline-block;width:8px;height:15px;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
 @keyframes blink{50%{opacity:0}}
+@keyframes vfi{to{opacity:1}}
 
 /* Spinning Icons */
 .hero-icons{display:flex;gap:3rem;margin:2.5rem 0;flex-wrap:wrap;justify-content:center}
@@ -358,6 +359,47 @@ footer a{color:var(--fg)}
   </div>
 </section>
 
+<!-- LIVE VESSEL DEMO -->
+<section id="vessel" class="fade-in">
+  <h2>Live: Agent on a <span class="accent">Fishing Vessel</span></h2>
+  <p class="subtitle">An OpenConstruct agent lives inside the F/V Quantum — a real-time MUD running on a Bering Sea crab boat. Watch it navigate, monitor gauges, and respond to live sensor ticks.</p>
+
+  <div style="background:#0a0e1a;border:1px solid var(--border);border-radius:14px;overflow:hidden;max-width:900px;margin:0 auto;font-family:'Courier New',monospace;font-size:13px">
+    <div style="background:linear-gradient(90deg,#0a0e1a,#121830,#0a0e1a);padding:8px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #1a2550">
+      <span style="color:#c0d0ee;font-size:12px;font-weight:700;letter-spacing:1px">F/V QUANTUM</span>
+      <span style="color:#3a4a6a;font-size:11px">Bering Sea · Wheelhouse</span>
+      <span style="margin-left:auto;color:#00ff88;font-size:11px">● ENGINE</span>
+      <span style="color:#00ff88;font-size:11px">● NAV</span>
+    </div>
+    <div style="display:flex;min-height:260px">
+      <div style="width:50%;border-right:1px solid #1a2550;padding:10px;overflow-y:auto;max-height:260px" id="vesselMud">
+        <div style="color:#00ff88;font-weight:700;font-size:13px;margin-bottom:2px">◆ Wheelhouse</div>
+        <div style="color:#8899bb;font-style:italic;font-size:12px;margin-bottom:6px;white-space:pre-line">You stand in the wheelhouse of the F/V Quantum. The helm console glows with chart plotters and GPS repeaters. Through salt-sprayed windows, the Bering Sea stretches to every horizon.
+
+Exits: aft → Nav Room, port → Galley, below → Engine Room</div>
+        <div style="color:#3a4a6a;font-size:10px;margin:4px 0">— Live Sensor Feed —</div>
+      </div>
+      <div style="width:50%;padding:10px;overflow-y:auto;max-height:260px" id="vesselDash">
+        <div style="color:#c0d0ee;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #1a2550">⚓ Wheelhouse Status</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px" id="vesselGauges"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="vesselInfo">
+          <div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:6px 8px"><div style="font-size:9px;color:#3a4a6a;text-transform:uppercase;letter-spacing:1px">Autopilot</div><div style="color:#00ff88;font-weight:700;font-size:12px">ENGAGED</div><div style="font-size:10px;color:#8899bb" id="vAP">HDG 198° → WP BRAVO</div></div>
+          <div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:6px 8px"><div style="font-size:9px;color:#3a4a6a;text-transform:uppercase;letter-spacing:1px">Fuel</div><div style="color:#c0d0ee;font-weight:700;font-size:12px">72%</div><div style="font-size:10px;color:#8899bb">Range: ~38 hours</div></div>
+          <div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:6px 8px"><div style="font-size:9px;color:#3a4a6a;text-transform:uppercase;letter-spacing:1px">Barometer</div><div style="color:#c0d0ee;font-weight:700;font-size:12px" id="vBaro">1008.3mb</div><div style="font-size:10px;color:#8899bb">Falling — frontal system</div></div>
+          <div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:6px 8px"><div style="font-size:9px;color:#3a4a6a;text-transform:uppercase;letter-spacing:1px">Catch</div><div style="color:#c0d0ee;font-weight:700;font-size:12px" id="vCatch">847 cod</div><div style="font-size:10px;color:#8899bb">Day 8/14 · Pacific cod season</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid #1a2550;padding:6px 10px;display:flex;align-items:center;gap:6px">
+      <span style="color:#00ff88;font-size:13px">❯</span>
+      <span style="color:#3a4a6a;font-size:11px">Agent monitoring active — ticks arrive in real-time from all rooms</span>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:1rem">
+    <a href="https://superinstance.ai" style="color:var(--muted);font-size:.85rem">Explore the full vessel MUD on superinstance.ai →</a>
+  </div>
+</section>
+
 <!-- LANGUAGE GRID -->
 <section id="languages" class="fade-in">
   <h2>12 <span class="accent">Languages</span></h2>
@@ -664,6 +706,50 @@ function initPhaseCanvases(){
     ctx.globalAlpha=1;requestAnimationFrame(draw5)})()}
 }
 initPhaseCanvases();
+
+// === VESSEL MINI DEMO ===
+(function(){
+  var heading=198+Math.random()*4,gauges={rpm:1650,oil:62,coolant:182,load:45},catch_=847,baro=1008.3,windSpeed=25,swell=7;
+  var ticks=[
+    function(){var h=195+Math.random()*10|0;return'GPS: 54°24.3\'N 166°18.7\'W — HDG '+h+'° | SOG '+(7.2+Math.random()*.8).toFixed(1)+'kts'},
+    function(){return'ENGINE: RPM '+Math.round(gauges.rpm)+' | FUEL: 72% | WIND: NW '+Math.round(windSpeed)+'kt | SEA: '+swell.toFixed(1)+'ft'},
+    'RADIO: "F/V Northern Lady, reporting 200 pots set, heading to next string"',
+    'AUTOPILOT: Holding course '+Math.round(heading)+'°. Waypoint BRAVO 4.2nm. ETA 33 minutes',
+    'SEA STATE: '+swell.toFixed(0)+'-'+(swell+2).toFixed(0)+'ft NW swell, 2ft wind chop on top',
+    'RADAR overlay: 3 vessels within 10nm. Nearest contact brg 027, range 2.3nm',
+    'SAT PHONE: Processor reports $1.85/lb for Pacific cod. Market steady.',
+    'LOG ENTRY: Strings 1-4 checked. Averaging 18 cod/pot. Pacing good',
+    function(){return'WEATHER: Barometer '+baro.toFixed(1)+'mb, falling. Frontal system 120nm NW'},
+    'VHF CH16: "Securite... F/V Quantum, 54-24N, 166-18W, fishing ops, keep clear"',
+    'DECK: Pot 62 SURFACED — 14 cod, 1 halibut (release), 6 pollock',
+    'CREW: Jake: "Good set. This ground\'s producing. Let\'s stay on it."'
+  ];
+  function pick(a){return a[Math.random()*a.length|0]}
+  function ts(){var d=new Date;return[d.getHours(),d.getMinutes(),d.getSeconds()].map(function(v){return String(v).padStart(2,'0')}).join(':')}
+  function addTick(){
+    var el=document.getElementById('vesselMud');if(!el)return;
+    var gen=pick(ticks),txt=typeof gen==='function'?gen():gen;
+    var d=document.createElement('div');d.style.cssText='margin:2px 0;opacity:0;animation:vfi .3s forwards';
+    d.innerHTML='<span style="background:#1a3050;color:#4a9aff;font-size:9px;padding:1px 5px;border-radius:3px;margin-right:4px">WH</span><span style="color:#3a4a6a;font-size:10px;margin-right:4px">'+ts()+'</span><span style="color:#8899bb">'+txt+'</span>';
+    el.appendChild(d);el.scrollTop=el.scrollHeight;
+    if(el.children.length>25)el.removeChild(el.firstChild);
+    gauges.rpm=Math.max(1600,Math.min(1700,gauges.rpm+(Math.random()-.5)*8));
+    heading+=((Math.random()-.5)*.4);if(heading<190)heading=190;if(heading>206)heading=206;
+    baro=Math.max(1004,Math.min(1012,baro+(Math.random()-.5)*.3));
+    windSpeed=Math.max(18,Math.min(35,windSpeed+(Math.random()-.5)*1.5));
+    catch_+=Math.random()*3|0;
+    var g=document.getElementById('vesselGauges');
+    if(g)g.innerHTML='<div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:4px 8px;text-align:center;flex:1"><div style="font-size:15px;font-weight:700;color:#2090ff">'+Math.round(heading)+'°<span style="font-size:9px;color:#3a4a6a"> hdg</span></div></div>'+
+      '<div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:4px 8px;text-align:center;flex:1"><div style="font-size:15px;font-weight:700;color:#00ff88">'+(7.2+Math.random()*.8).toFixed(1)+'<span style="font-size:9px;color:#3a4a6a"> kts</span></div></div>'+
+      '<div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:4px 8px;text-align:center;flex:1"><div style="font-size:15px;font-weight:700;color:#ffb020">NW '+Math.round(windSpeed)+'<span style="font-size:9px;color:#3a4a6a"> kt</span></div></div>'+
+      '<div style="background:#0d1224;border:1px solid #1a2550;border-radius:6px;padding:4px 8px;text-align:center;flex:1"><div style="font-size:15px;font-weight:700;color:#4a9aff">'+swell.toFixed(1)+'<span style="font-size:9px;color:#3a4a6a"> ft</span></div></div>';
+    var ap=document.getElementById('vAP');if(ap)ap.textContent='HDG '+Math.round(heading)+'° → WP BRAVO';
+    var vb=document.getElementById('vBaro');if(vb)vb.textContent=baro.toFixed(1)+'mb';
+    var vc=document.getElementById('vCatch');if(vc)vc.textContent=catch_+' cod';
+  }
+  for(var i=0;i<4;i++)setTimeout(addTick,i*300);
+  setInterval(addTick,2200);
+})();
 </script>
 
 <script src="https://superinstance.github.io/superinstance-design/superinstance-nav.js"></script>
