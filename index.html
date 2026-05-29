@@ -196,21 +196,12 @@ footer a{color:var(--fg)}
   section{padding:3rem 1.2rem}
 }
 </style>
+<link rel="stylesheet" href="https://superinstance.github.io/superinstance-design/superinstance.css">
 </head>
 <body>
+<style>body{padding-top:64px;}</style>
 
-<!-- NAV -->
-<nav>
-  <div class="logo">◈ OpenConstruct</div>
-  <div class="links">
-    <a href="#builder">Build</a>
-    <a href="#architecture">Architecture</a>
-    <a href="#languages">Languages</a>
-    <a href="#hardware">Hardware</a>
-    <a href="#examples">Examples</a>
-    <a href="https://github.com/SuperInstance/OpenConstruct">GitHub</a>
-  </div>
-</nav>
+<div id="nav-root"></div>
 
 <!-- HERO -->
 <div class="hero">
@@ -523,9 +514,7 @@ agent = <span class="ty">Agent</span>.<span class="fn">builder</span>(<span clas
   </div>
 </div>
 
-<footer>
-  <p>Part of the <a href="https://github.com/SuperInstance">SuperInstance</a> ecosystem. Fork of <a href="https://github.com/NVIDIA/OpenShell">NVIDIA OpenShell</a> (Apache 2.0).</p>
-</footer>
+<div id="footer-root"></div>
 
 <script>
 // === HERO TERMINAL ANIMATION ===
@@ -671,6 +660,13 @@ function initPhaseCanvases(){
     ctx.globalAlpha=1;requestAnimationFrame(draw5)})()}
 }
 initPhaseCanvases();
+</script>
+
+<script src="https://superinstance.github.io/superinstance-design/superinstance-nav.js"></script>
+<script src="https://superinstance.github.io/superinstance-design/superinstance-footer.js"></script>
+<script>
+document.getElementById('nav-root').innerHTML = createSuperInstanceNav('openconstruct');
+document.getElementById('footer-root').innerHTML = createSuperInstanceFooter();
 </script>
 </body>
 </html>
