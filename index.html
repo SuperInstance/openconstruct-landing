@@ -5,125 +5,672 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenConstruct — Any Agent, Any Hardware, Any Language</title>
 <style>
-  :root { --bg:#0a0a0f; --fg:#e8e8ed; --muted:#6b6b80; --accent:#7c5cfc; --accent2:#fc5c7c; --card:#12121a; --border:#1e1e2e; --green:#5cfc7c; --mono:'JetBrains Mono','Fira Code',monospace; --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6}
-  pre,code{font-family:var(--mono)}
-  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
-  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
-  .hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 50%,rgba(124,92,252,.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 50%,rgba(252,92,124,.05) 0%,transparent 50%);animation:drift 20s ease-in-out infinite alternate}
-  @keyframes drift{from{transform:rotate(0)}to{transform:rotate(3deg)}}
-  .hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;letter-spacing:-.02em;position:relative}
-  .hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .hero .tagline{font-size:clamp(1rem,2vw,1.4rem);color:var(--muted);max-width:640px;margin-top:1rem;position:relative}
-  .stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:3rem 2rem;text-align:center}
-  .stat .num{font-size:3rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .stat .label{color:var(--muted);font-size:.9rem}
-  section{padding:4rem 2rem;max-width:1100px;margin:0 auto}
-  section h2{font-size:2rem;margin-bottom:1.5rem}
-  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:2rem}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color .2s}
-  .card:hover{border-color:var(--accent)}
-  .card .icon{font-size:2rem;margin-bottom:.5rem}
-  .card h3{font-size:1.1rem;margin-bottom:.5rem}
-  .card p{color:var(--muted);font-size:.9rem}
-  .card .tag{color:var(--accent);font-family:var(--mono);font-size:.8rem;margin-top:.5rem}
-  .cave-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;font-family:var(--mono);font-size:.85rem;line-height:1.4;overflow-x:auto;color:var(--muted);margin:1.5rem 0}
-  .cave-box .hl{color:var(--accent)}.cave-box .warm{color:var(--accent2)}.cave-box .grn{color:var(--green)}
-  .flow{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem;justify-content:center}
-  .flow-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;flex:1;min-width:160px;max-width:200px;text-align:center}
-  .flow-step .n{font-size:2rem;font-weight:800;color:var(--accent)}
-  .flow-step h3{font-size:.95rem;margin:.5rem 0 .3rem}
-  .flow-step p{color:var(--muted);font-size:.8rem}
-  .flow-arr{display:flex;align-items:center;color:var(--muted);font-size:1.5rem}
-  footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:.85rem}
-  footer a{color:var(--fg)}
+:root{--bg:#0a0a0a;--fg:#e0e0e0;--muted:#888;--accent:#00ff88;--accent2:#00cc6a;--card:#111;--card2:#161616;--border:#222;--mono:'SF Mono','Fira Code','Cascadia Code',monospace;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+::selection{background:var(--accent);color:#000}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center}
+nav .logo{font-weight:800;font-size:1.1rem;color:var(--accent)}
+nav .links{display:flex;gap:1.5rem;font-size:.85rem}
+nav a{color:var(--muted);transition:color .2s}nav a:hover{color:var(--fg);text-decoration:none}
+@media(max-width:768px){nav .links{display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 30%,rgba(0,255,136,.06) 0%,transparent 60%);pointer-events:none}
+.hero::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='g' width='60' height='60' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='30' cy='30' r='.5' fill='%23333'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='60' height='60' fill='url(%23g)'/%3E%3C/svg%3E");opacity:.4;pointer-events:none}
+.hero>*{position:relative;z-index:1}
+.hero h1{font-size:clamp(2.5rem,7vw,5.5rem);font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:1rem}
+.hero h1 .accent{color:var(--accent)}
+.hero .tagline{font-size:clamp(1.1rem,2.5vw,1.6rem);color:var(--muted);max-width:700px;margin-bottom:2.5rem}
+
+/* Terminal */
+.terminal{background:#0d0d0d;border:1px solid var(--border);border-radius:12px;width:100%;max-width:560px;overflow:hidden;font-family:var(--mono);font-size:.85rem;text-align:left;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.terminal-bar{background:#181818;padding:.5rem .8rem;display:flex;gap:6px;align-items:center}
+.terminal-bar span{width:10px;height:10px;border-radius:50%}
+.terminal-bar .r{background:#ff5f57}.terminal-bar .y{background:#febc2e}.terminal-bar .g{background:#28c840}
+.terminal-bar .title{color:var(--muted);font-size:.75rem;margin-left:.5rem}
+.terminal-body{padding:1rem;min-height:160px;color:#ccc;line-height:1.7}
+.terminal-body .prompt{color:var(--accent)}
+.terminal-body .comment{color:#555}
+.terminal-body .success{color:var(--accent)}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+
+/* Spinning Icons */
+.hero-icons{display:flex;gap:3rem;margin:2.5rem 0;flex-wrap:wrap;justify-content:center}
+.hero-icon{text-align:center;animation:floatIcon 3s ease-in-out infinite}
+.hero-icon:nth-child(2){animation-delay:-1s}
+.hero-icon:nth-child(3){animation-delay:-2s}
+.hero-icon .icon-circle{width:70px;height:70px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto .5rem;transition:border-color .3s}
+.hero-icon:hover .icon-circle{border-color:var(--accent)}
+.hero-icon .label{font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+@keyframes floatIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Countdown */
+.countdown{margin-top:1rem;font-size:.95rem;color:var(--muted)}
+.countdown span{color:var(--accent);font-weight:700;font-size:1.1rem}
+
+/* Sections */
+section{padding:5rem 2rem;max-width:1200px;margin:0 auto}
+section h2{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;margin-bottom:.8rem;letter-spacing:-.02em}
+section h2 .accent{color:var(--accent)}
+section .subtitle{color:var(--muted);font-size:1.05rem;max-width:600px;margin-bottom:2rem}
+
+/* BUILD YOUR AGENT */
+.builder{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-top:1rem}
+.builder-steps{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+.builder-step{padding:.5rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .2s}
+.builder-step.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.builder-panel{display:none}
+.builder-panel.active{display:block}
+.choice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.8rem}
+.choice-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:1rem .8rem;text-align:center;cursor:pointer;transition:all .2s;font-size:.85rem}
+.choice-card:hover{border-color:#444}
+.choice-card.selected{border-color:var(--accent);background:rgba(0,255,136,.05)}
+.choice-card .emoji{font-size:1.5rem;margin-bottom:.3rem}
+.choice-card .name{font-weight:600;margin-bottom:.2rem}
+.choice-card .detail{color:var(--muted);font-size:.7rem}
+.toggle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+.toggle-item{display:flex;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:.7rem 1rem;cursor:pointer;transition:all .2s}
+.toggle-item.active{border-color:var(--accent);background:rgba(0,255,136,.05)}
+.toggle-item .t-name{font-size:.85rem;font-weight:600}
+.toggle-item .t-icon{font-size:1.2rem;margin-right:.5rem}
+.toggle-switch{width:36px;height:20px;border-radius:10px;background:#333;position:relative;transition:background .2s;flex-shrink:0}
+.toggle-item.active .toggle-switch{background:var(--accent)}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle-item.active .toggle-switch::after{transform:translateX(16px)}
+.builder-output{margin-top:1.5rem;background:#0d0d0d;border:1px solid var(--border);border-radius:10px;padding:1rem;font-family:var(--mono);font-size:.8rem;overflow-x:auto;line-height:1.7}
+.builder-output .cmd{color:var(--accent)}
+.builder-output .comment{color:#555}
+.copy-btn{margin-top:.8rem;padding:.5rem 1.2rem;background:var(--accent);color:#000;border:none;border-radius:8px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:var(--sans);transition:transform .1s}
+.copy-btn:active{transform:scale(.95)}
+
+/* ARCHITECTURE */
+.arch-container{position:relative;font-family:var(--mono);font-size:.78rem;line-height:1}
+.arch-layer{display:flex;align-items:center;padding:.7rem 1rem;margin:.4rem 0;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:default;transition:all .3s;position:relative}
+.arch-layer:hover{border-color:var(--accent);background:rgba(0,255,136,.03)}
+.arch-layer:hover .arch-tooltip{opacity:1;transform:translateY(0)}
+.arch-num{color:var(--accent);font-weight:700;width:24px;flex-shrink:0}
+.arch-name{font-weight:600;min-width:120px}
+.arch-desc{color:var(--muted);font-size:.72rem;margin-left:1rem}
+.arch-tooltip{position:absolute;left:100%;top:50%;transform:translateY(5px);background:#1a1a1a;border:1px solid var(--accent);border-radius:8px;padding:.8rem 1rem;font-size:.75rem;color:var(--fg);opacity:0;transition:all .3s;width:260px;z-index:10;pointer-events:none;margin-left:1rem}
+@media(max-width:900px){.arch-tooltip{display:none}}
+.arch-arrows{text-align:center;color:var(--accent);font-size:.7rem;padding:.15rem 0;opacity:.5}
+@keyframes flowDown{0%{opacity:.2}50%{opacity:1}100%{opacity:.2}}
+.arch-arrows span{animation:flowDown 2s ease-in-out infinite;display:inline-block}
+.arch-arrows span:nth-child(2){animation-delay:.3s}
+.arch-arrows span:nth-child(3){animation-delay:.6s}
+
+/* PHASES */
+.phases-scroll{display:flex;gap:1.5rem;overflow-x:auto;padding:1rem 0 2rem;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+.phase-card{min-width:260px;max-width:280px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;scroll-snap-align:start;transition:border-color .3s;flex-shrink:0}
+.phase-card:hover{border-color:var(--accent)}
+.phase-num{font-size:2.5rem;font-weight:900;color:var(--accent);opacity:.3;line-height:1}
+.phase-card:hover .phase-num{opacity:.8}
+.phase-card h3{font-size:1.1rem;margin:.5rem 0 .4rem}
+.phase-card p{color:var(--muted);font-size:.85rem}
+.phase-anim{margin-top:1rem;height:40px;position:relative;overflow:hidden}
+
+/* LANGUAGE GRID */
+.lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.lang-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;gap:.8rem;transition:border-color .2s}
+.lang-card:hover{border-color:var(--accent)}
+.lang-emoji{font-size:1.5rem;flex-shrink:0}
+.lang-info{flex:1;min-width:0}
+.lang-info .lang-name{font-weight:700;font-size:.9rem}
+.lang-info .lang-cmd{color:var(--muted);font-family:var(--mono);font-size:.7rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lang-check{color:var(--accent);font-size:1.1rem;flex-shrink:0}
+
+/* HARDWARE SPECTRUM */
+.spectrum{display:flex;align-items:flex-end;justify-content:center;gap:0;margin:2rem 0;flex-wrap:wrap}
+.spec-node{text-align:center;padding:1rem .8rem;cursor:pointer;transition:all .3s;position:relative;min-width:90px}
+.spec-node:hover{transform:translateY(-5px)}
+.spec-bar{width:3px;background:var(--accent);margin:0 auto .8rem;transition:height .5s;border-radius:2px;opacity:.6}
+.spec-node:hover .spec-bar{opacity:1}
+.spec-node .spec-icon{font-size:1.5rem;margin-bottom:.3rem}
+.spec-node .spec-name{font-weight:700;font-size:.85rem}
+.spec-node .spec-price{color:var(--accent);font-family:var(--mono);font-size:.75rem}
+.spec-node .spec-detail{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid var(--accent);border-radius:8px;padding:.8rem;font-size:.75rem;color:var(--fg);width:200px;z-index:10;margin-bottom:.5rem}
+.spec-node:hover .spec-detail{display:block}
+.spec-line{width:40px;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);align-self:center;flex-shrink:0;animation:flowPulse 2s ease-in-out infinite}
+@keyframes flowPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* STATS */
+.stats-row{display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;padding:2rem 0}
+.stat-item{text-align:center}
+.stat-num{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;color:var(--accent)}
+.stat-label{color:var(--muted);font-size:.9rem;margin-top:.3rem}
+.stat-sub{color:#555;font-size:.75rem}
+
+/* CODE EXAMPLES */
+.code-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0}
+.code-tab{padding:.7rem 1.5rem;font-size:.85rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .2s;background:transparent;border-top:none;border-left:none;border-right:none;font-family:var(--sans)}
+.code-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.code-block{background:#0d0d0d;border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:1.5rem;font-family:var(--mono);font-size:.8rem;overflow-x:auto;display:none;line-height:1.7;position:relative}
+.code-block.active{display:block}
+.code-block .kw{color:#c678dd}
+.code-block .fn{color:#61afef}
+.code-block .str{color:#98c379}
+.code-block .cm{color:#555}
+.code-block .num{color:#d19a66}
+.code-block .ty{color:#e5c07b}
+.code-copy{position:absolute;top:.8rem;right:.8rem;padding:.3rem .8rem;background:#222;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:.7rem;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.code-copy:hover{border-color:var(--accent);color:var(--accent)}
+
+/* CTA */
+.cta{text-align:center;padding:5rem 2rem;position:relative}
+.cta::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,255,136,.08) 0%,transparent 60%);pointer-events:none}
+.cta>*{position:relative}
+.cta h2{font-size:clamp(2rem,5vw,3rem);font-weight:900;margin-bottom:.5rem}
+.cta .cta-sub{color:var(--muted);font-size:1.1rem;margin-bottom:2rem}
+.cta .install-cmd{display:inline-block;background:#0d0d0d;border:1px solid var(--border);border-radius:10px;padding:.8rem 1.5rem;font-family:var(--mono);font-size:.9rem;color:var(--accent);cursor:pointer;transition:border-color .2s;margin-bottom:1.5rem}
+.cta .install-cmd:hover{border-color:var(--accent)}
+.cta-links{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
+.cta-links a{color:var(--muted);font-size:.9rem;transition:color .2s}
+.cta-links a:hover{color:var(--accent)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;color:var(--muted);font-size:.8rem}
+footer a{color:var(--fg)}
+
+/* Animations */
+.fade-in{opacity:0;transform:translateY(30px);transition:all .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:2.2rem}
+  .hero-icons{gap:1.5rem}
+  .terminal{max-width:100%}
+  .builder-output{font-size:.7rem}
+  .arch-desc{display:none}
+  .spectrum{flex-direction:column;align-items:center}
+  .spec-line{width:2px;height:20px}
+  .stats-row{gap:2rem}
+  section{padding:3rem 1.2rem}
+}
 </style>
 </head>
 <body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">◈ OpenConstruct</div>
+  <div class="links">
+    <a href="#builder">Build</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#languages">Languages</a>
+    <a href="#hardware">Hardware</a>
+    <a href="#examples">Examples</a>
+    <a href="https://github.com/SuperInstance/OpenConstruct">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
 <div class="hero">
-  <h1><span>OpenConstruct</span></h1>
-  <p class="tagline">Any agent. Any hardware. Any language.<br>An agent walks into a cave, sees shadows of what's possible, and chooses what becomes real.</p>
+  <h1>Any agent.<br>Any hardware.<br><span class="accent">Any language.</span></h1>
+  <p class="tagline">An agent walks into a cave, sees shadows of what's possible, and chooses what becomes real.</p>
+
+  <div class="terminal" id="heroTerminal">
+    <div class="terminal-bar">
+      <span class="r"></span><span class="y"></span><span class="g"></span>
+      <span class="title">bash — 80×24</span>
+    </div>
+    <div class="terminal-body" id="termBody"></div>
+  </div>
+
+  <div class="hero-icons">
+    <div class="hero-icon">
+      <div class="icon-circle">📡</div>
+      <div class="label">ESP32</div>
+    </div>
+    <div class="hero-icon">
+      <div class="icon-circle">🎮</div>
+      <div class="label">Jetson</div>
+    </div>
+    <div class="hero-icon">
+      <div class="icon-circle">⚡</div>
+      <div class="label">DGX</div>
+    </div>
+  </div>
+
+  <div class="countdown">Get started in <span id="countdown">60</span> seconds</div>
 </div>
-<div class="stats">
-  <div class="stat"><div class="num">200+</div><div class="label">Repos</div></div>
-  <div class="stat"><div class="num">500+</div><div class="label">Tests</div></div>
-  <div class="stat"><div class="num">16</div><div class="label">Languages</div></div>
-  <div class="stat"><div class="num">6</div><div class="label">Senses</div></div>
+
+<!-- BUILD YOUR AGENT -->
+<section id="builder" class="fade-in">
+  <h2>Build Your <span class="accent">Agent</span></h2>
+  <p class="subtitle">Choose your hardware, language, and senses. Get a ready-to-run config.</p>
+
+  <div class="builder">
+    <div class="builder-steps">
+      <button class="builder-step active" onclick="showPanel(0)">① Hardware</button>
+      <button class="builder-step" onclick="showPanel(1)">② Language</button>
+      <button class="builder-step" onclick="showPanel(2)">③ Senses</button>
+    </div>
+
+    <!-- Panel 1: Hardware -->
+    <div class="builder-panel active" id="panel0">
+      <div class="choice-grid" id="hwGrid">
+        <div class="choice-card" onclick="pickHw(this,'esp32')"><div class="emoji">📡</div><div class="name">ESP32</div><div class="detail">$3 · Ultra-light</div></div>
+        <div class="choice-card" onclick="pickHw(this,'jetson')"><div class="emoji">🎮</div><div class="name">Jetson</div><div class="detail">$200 · Edge GPU</div></div>
+        <div class="choice-card" onclick="pickHw(this,'desktop')"><div class="emoji">🖥️</div><div class="name">Desktop</div><div class="detail">$1K · Full stack</div></div>
+        <div class="choice-card" onclick="pickHw(this,'cloud')"><div class="emoji">☁️</div><div class="name">Cloud</div><div class="detail">$$ · Scale out</div></div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Language -->
+    <div class="builder-panel" id="panel1">
+      <div class="choice-grid" id="langGrid">
+        <div class="choice-card" onclick="pickLang(this,'rust')"><div class="emoji">🦀</div><div class="name">Rust</div><div class="detail">Native core</div></div>
+        <div class="choice-card" onclick="pickLang(this,'python')"><div class="emoji">🐍</div><div class="name">Python</div><div class="detail">ML-first</div></div>
+        <div class="choice-card" onclick="pickLang(this,'typescript')"><div class="emoji">🔷</div><div class="name">TypeScript</div><div class="detail">Web/Browser</div></div>
+        <div class="choice-card" onclick="pickLang(this,'go')"><div class="emoji">🔵</div><div class="name">Go</div><div class="detail">Services</div></div>
+        <div class="choice-card" onclick="pickLang(this,'java')"><div class="emoji">☕</div><div class="name">Java</div><div class="detail">Enterprise</div></div>
+        <div class="choice-card" onclick="pickLang(this,'swift')"><div class="emoji">🍎</div><div class="name">Swift</div><div class="detail">Apple platforms</div></div>
+        <div class="choice-card" onclick="pickLang(this,'csharp')"><div class="emoji">🟣</div><div class="name">C#</div><div class="detail">.NET</div></div>
+        <div class="choice-card" onclick="pickLang(this,'ruby')"><div class="emoji">💎</div><div class="name">Ruby</div><div class="detail">Scripts</div></div>
+        <div class="choice-card" onclick="pickLang(this,'zig')"><div class="emoji">⚡</div><div class="name">Zig</div><div class="detail">Embedded</div></div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Senses -->
+    <div class="builder-panel" id="panel2">
+      <div class="toggle-grid" id="senseGrid">
+        <div class="toggle-item" onclick="toggleSense(this,'vision')"><span>👁️ Vision</span><div class="toggle-switch"></div></div>
+        <div class="toggle-item" onclick="toggleSense(this,'sonar')"><span>👂 Sonar</span><div class="toggle-switch"></div></div>
+        <div class="toggle-item" onclick="toggleSense(this,'manus')"><span>✋ Manus</span><div class="toggle-switch"></div></div>
+        <div class="toggle-item" onclick="toggleSense(this,'browser')"><span>🌐 Browser</span><div class="toggle-switch"></div></div>
+        <div class="toggle-item" onclick="toggleSense(this,'desktop')"><span>🖥️ Desktop</span><div class="toggle-switch"></div></div>
+        <div class="toggle-item" onclick="toggleSense(this,'voice')"><span>🎙️ Voice</span><div class="toggle-switch"></div></div>
+      </div>
+    </div>
+
+    <div class="builder-output" id="builderOutput">
+<span class="comment">// Pick hardware, language, and senses to generate your config</span>
+<span class="cmd">$</span> curl -fsSL https://openconstruct.dev/install | bash
+    </div>
+    <button class="copy-btn" onclick="copyOutput()">📋 Copy &amp; Run</button>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" class="fade-in">
+  <h2>8-Layer <span class="accent">Architecture</span></h2>
+  <p class="subtitle">Every layer is a room. Data flows up. Commands flow down. Everything is text.</p>
+
+  <div id="archDiagram">
+    <div class="arch-layer" style="animation-delay:0s"><span class="arch-num">8</span><span class="arch-name">Rendering</span><span class="arch-desc">Text → UI, ANSI, HTML, voice</span><div class="arch-tooltip">Agent text becomes rendered output — HTML pages, terminal ANSI, voice audio, mobile notifications. Any interface, same data.</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">7</span><span class="arch-name">State</span><span class="arch-desc">Persist everything, replay anytime</span><div class="arch-tooltip">Full state management with event sourcing. Every tick, every message, every decision — persisted and replayable. Time-travel debugging for agents.</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">6</span><span class="arch-name">Execution</span><span class="arch-desc">Schedule, run, retry</span><div class="arch-tooltip">Task execution engine with scheduling, retries, and concurrency control. Agents run tasks, not just chat. Think cron + job queue for AI.</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">5</span><span class="arch-name">Fleet</span><span class="arch-desc">Discover, connect, coordinate</span><div class="arch-tooltip">Multi-agent topology. Discover peers, join rooms, share context. ESP32s are rooms, Jetsons see them, cloud agents orchestrate them.</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">4</span><span class="arch-name">Communication</span><span class="arch-desc">A2A protocol, rooms, messages</span><div class="arch-tooltip">Agent-to-Agent communication via the A2A protocol. Rooms for shared context, direct messages for private coordination. Everything is text.</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">3</span><span class="arch-name">Fusion</span><span class="arch-desc">Merge senses, build context</span><div class="arch-tooltip">Sensor fusion layer. Vision sees a person, sonar hears footsteps, manus detects a door open — fusion correlates them into a unified world state.</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">2</span><span class="arch-name">Senses</span><span class="arch-desc">Vision, Sonar, Manus, Browser…</span><div class="arch-tooltip">The perception layer. Each sense converts raw input to text descriptions. Camera → "person approaching", microphone → "footsteps, NE direction".</div></div>
+    <div class="arch-arrows"><span>│</span><span>│</span><span>│</span></div>
+    <div class="arch-layer"><span class="arch-num">1</span><span class="arch-name">Shell</span><span class="arch-desc">Agent runtime, REPL, lifecycle</span><div class="arch-tooltip">The agent shell — REPL loop, lifecycle management, error handling. Where the agent lives and breathes. Start, stop, pause, resume.</div></div>
+  </div>
+</section>
+
+<!-- 5 PHASES -->
+<section id="phases" class="fade-in">
+  <h2>The 5 <span class="accent">Phases</span></h2>
+  <p class="subtitle">From zero to running agent in five steps.</p>
+
+  <div class="phases-scroll">
+    <div class="phase-card">
+      <div class="phase-num">01</div>
+      <h3>Declare Agent</h3>
+      <p>Define who your agent is — its model, tools, and capabilities. The agent card forms.</p>
+      <div class="phase-anim"><canvas id="phaseCanvas1" width="220" height="40"></canvas></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">02</div>
+      <h3>Select Modules</h3>
+      <p>Browse the cave of shadows. Each shadow is a module. Pick what becomes real.</p>
+      <div class="phase-anim"><canvas id="phaseCanvas2" width="220" height="40"></canvas></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">03</div>
+      <h3>Choose Interface</h3>
+      <p>CLI, API, embedded, or A2A. How does your agent present itself to the world?</p>
+      <div class="phase-anim"><canvas id="phaseCanvas3" width="220" height="40"></canvas></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">04</div>
+      <h3>Connect Fleet</h3>
+      <p>Discover other agents. Join rooms. Form the topology your mission needs.</p>
+      <div class="phase-anim"><canvas id="phaseCanvas4" width="220" height="40"></canvas></div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">05</div>
+      <h3>Generate Config</h3>
+      <p>Everything compiles to a single config. Ship it. Your agent exits the cave.</p>
+      <div class="phase-anim"><canvas id="phaseCanvas5" width="220" height="40"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGE GRID -->
+<section id="languages" class="fade-in">
+  <h2>12 <span class="accent">Languages</span></h2>
+  <p class="subtitle">Write agents in the language you already know. Every binding is first-class.</p>
+
+  <div class="lang-grid">
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-rust"><span class="lang-emoji">🦀</span><div class="lang-info"><div class="lang-name">Rust</div><div class="lang-cmd">cargo add openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-python"><span class="lang-emoji">🐍</span><div class="lang-info"><div class="lang-name">Python</div><div class="lang-cmd">pip install openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-typescript"><span class="lang-emoji">🔷</span><div class="lang-info"><div class="lang-name">TypeScript</div><div class="lang-cmd">npm i openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-go"><span class="lang-emoji">🔵</span><div class="lang-info"><div class="lang-name">Go</div><div class="lang-cmd">go get openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-java"><span class="lang-emoji">☕</span><div class="lang-info"><div class="lang-name">Java</div><div class="lang-cmd">Maven: openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-swift"><span class="lang-emoji">🍎</span><div class="lang-info"><div class="lang-name">Swift</div><div class="lang-cmd">SPM: openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-csharp"><span class="lang-emoji">🟣</span><div class="lang-info"><div class="lang-name">C#</div><div class="lang-cmd">dotnet add pkg</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-ruby"><span class="lang-emoji">💎</span><div class="lang-info"><div class="lang-name">Ruby</div><div class="lang-cmd">gem install openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-zig"><span class="lang-emoji">⚡</span><div class="lang-info"><div class="lang-name">Zig</div><div class="lang-cmd">zig fetch openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-cpp"><span class="lang-emoji">⚙️</span><div class="lang-info"><div class="lang-name">C++</div><div class="lang-cmd">vcpkg: openconstruct</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-c"><span class="lang-emoji">🔧</span><div class="lang-info"><div class="lang-name">C</div><div class="lang-cmd">make install</div></div><span class="lang-check">✓</span></a>
+    <a class="lang-card" href="https://github.com/SuperInstance/openconstruct-kt"><span class="lang-emoji">🟠</span><div class="lang-info"><div class="lang-name">Kotlin</div><div class="lang-cmd">Gradle: openconstruct</div></div><span class="lang-check">✓</span></a>
+  </div>
+</section>
+
+<!-- HARDWARE SPECTRUM -->
+<section id="hardware" class="fade-in">
+  <h2>Hardware <span class="accent">Spectrum</span></h2>
+  <p class="subtitle">From $3 microcontrollers to $25K inference clusters. Same API, same agent model.</p>
+
+  <div class="spectrum">
+    <div class="spec-node">
+      <div class="spec-detail">Ultralight sensor node. MQTT rooms, text-based readings, command acceptance. Runs on 4MB flash.</div>
+      <div class="spec-bar" style="height:20px"></div>
+      <div class="spec-icon">📡</div>
+      <div class="spec-name">ESP32</div>
+      <div class="spec-price">$3</div>
+    </div>
+    <div class="spec-line"></div>
+    <div class="spec-node">
+      <div class="spec-detail">Edge GPU with CUDA. Vision + JEPA + small LLM. Sees ESP32s as rooms, leaves ticks for cloud agents.</div>
+      <div class="spec-bar" style="height:50px"></div>
+      <div class="spec-icon">🎮</div>
+      <div class="spec-name">Jetson</div>
+      <div class="spec-price">$200</div>
+    </div>
+    <div class="spec-line"></div>
+    <div class="spec-node">
+      <div class="spec-detail">Full agent shell. All modules loaded. Plato rooms, A2A discovery, desktop control, browser automation.</div>
+      <div class="spec-bar" style="height:80px"></div>
+      <div class="spec-icon">🖥️</div>
+      <div class="spec-name">Desktop</div>
+      <div class="spec-price">$1K</div>
+    </div>
+    <div class="spec-line"></div>
+    <div class="spec-node">
+      <div class="spec-detail">Horizontal scale. Auto-discovery, load balancing, fleet management. Run 1 or 10,000 agents.</div>
+      <div class="spec-bar" style="height:110px"></div>
+      <div class="spec-icon">☁️</div>
+      <div class="spec-name">Cloud</div>
+      <div class="spec-price">$$$</div>
+    </div>
+    <div class="spec-line"></div>
+    <div class="spec-node">
+      <div class="spec-detail">Full inference power. All sense modules GPU-accelerated. Multi-agent orchestration at DGX scale.</div>
+      <div class="spec-bar" style="height:150px"></div>
+      <div class="spec-icon">⚡</div>
+      <div class="spec-name">DGX</div>
+      <div class="spec-price">$25K</div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM STATS -->
+<section id="stats" class="fade-in">
+  <h2>Ecosystem <span class="accent">Stats</span></h2>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num" data-target="500">0</div><div class="stat-label">Repositories</div><div class="stat-sub">and growing</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="12">0</div><div class="stat-label">Languages</div><div class="stat-sub">first-class bindings</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="500">0</div><div class="stat-label">Tests</div><div class="stat-sub">CI/CD verified</div></div>
+    <div class="stat-item"><div class="stat-num" data-target="21">0</div><div class="stat-label">Docs</div><div class="stat-sub">comprehensive guides</div></div>
+    <div class="stat-item" style="min-width:100px"><div class="stat-num" style="font-size:clamp(1.5rem,3vw,2rem);letter-spacing:.05em">Apache 2.0</div><div class="stat-label">License</div><div class="stat-sub">truly open</div></div>
+  </div>
+</section>
+
+<!-- CODE EXAMPLES -->
+<section id="examples" class="fade-in">
+  <h2>Code <span class="accent">Examples</span></h2>
+  <p class="subtitle">Full working examples. Init an agent, subscribe to senses, post a tick.</p>
+
+  <div class="code-tabs">
+    <button class="code-tab active" onclick="showCode(0)">🦀 Rust</button>
+    <button class="code-tab" onclick="showCode(1)">🐍 Python</button>
+    <button class="code-tab" onclick="showCode(2)">🔷 TypeScript</button>
+  </div>
+
+  <div class="code-block active" id="code0">
+<button class="code-copy" onclick="copyCode(0)">Copy</button>
+<span class="kw">use</span> openconstruct::<span class="ty">Agent</span>;
+
+<span class="cm">// Initialize your agent</span>
+<span class="kw">let mut</span> agent = <span class="ty">Agent</span>::<span class="fn">builder</span>(<span class="str">"my-agent"</span>)
+    .<span class="fn">with_sense</span>(<span class="str">"vision"</span>)
+    .<span class="fn">with_sense</span>(<span class="str">"sonar"</span>)
+    .<span class="fn">with_fleet</span>(<span class="str">"plato"</span>)
+    .<span class="fn">build</span>().<span class="fn">await</span>?;
+
+<span class="cm">// Subscribe to vision events</span>
+<span class="kw">let mut</span> vision = agent.<span class="fn">subscribe</span>::&lt;<span class="ty">VisionEvent</span>&gt;().<span class="fn">await</span>?;
+
+<span class="cm">// Post a tick — your agent's heartbeat</span>
+agent.<span class="fn">tick</span>(<span class="str">"Observing entryway. No motion detected."</span>).<span class="fn">await</span>?;</div>
+
+  <div class="code-block" id="code1">
+<button class="code-copy" onclick="copyCode(1)">Copy</button>
+<span class="kw">from</span> openconstruct <span class="kw">import</span> <span class="ty">Agent</span>
+
+<span class="cm"># Initialize your agent</span>
+agent = <span class="ty">Agent</span>.<span class="fn">builder</span>(<span class="str">"my-agent"</span>) \
+    .<span class="fn">with_sense</span>(<span class="str">"vision"</span>) \
+    .<span class="fn">with_sense</span>(<span class="str">"sonar"</span>) \
+    .<span class="fn">with_fleet</span>(<span class="str">"plato"</span>) \
+    .<span class="fn">build</span>()
+
+<span class="cm"># Subscribe to vision events</span>
+<span class="kw">async for</span> event <span class="kw">in</span> agent.<span class="fn">subscribe</span>(<span class="str">"vision"</span>):
+    <span class="fn">print</span>(<span class="kw">f</span><span class="str">"Saw: {event.description}"</span>)
+
+<span class="cm"># Post a tick — your agent's heartbeat</span>
+<span class="kw">await</span> agent.<span class="fn">tick</span>(<span class="str">"Observing entryway. No motion detected."</span>)</div>
+
+  <div class="code-block" id="code2">
+<button class="code-copy" onclick="copyCode(2)">Copy</button>
+<span class="kw">import</span> { <span class="ty">Agent</span> } <span class="kw">from</span> <span class="str">"openconstruct"</span>;
+
+<span class="cm">// Initialize your agent</span>
+<span class="kw">const</span> agent = <span class="kw">await</span> <span class="ty">Agent</span>.<span class="fn">builder</span>(<span class="str">"my-agent"</span>)
+  .<span class="fn">withSense</span>(<span class="str">"vision"</span>)
+  .<span class="fn">withSense</span>(<span class="str">"sonar"</span>)
+  .<span class="fn">withFleet</span>(<span class="str">"plato"</span>)
+  .<span class="fn">build</span>();
+
+<span class="cm">// Subscribe to vision events</span>
+<span class="kw">for await</span> (<span class="kw">const</span> event <span class="kw">of</span> agent.<span class="fn">subscribe</span>(<span class="str">"vision"</span>)) {
+  console.<span class="fn">log</span>(<span class="str">`Saw: ${event.description}`</span>);
+}
+
+<span class="cm">// Post a tick — your agent's heartbeat</span>
+<span class="kw">await</span> agent.<span class="fn">tick</span>(<span class="str">"Observing entryway. No motion detected."</span>);</div>
+</section>
+
+<!-- CTA -->
+<div class="cta fade-in">
+  <h2>Start <span class="accent">Building</span></h2>
+  <p class="cta-sub">One command. Any hardware. Any language. Open source.</p>
+  <div class="install-cmd" onclick="copyCtaCmd()">$ curl -fsSL https://openconstruct.dev/install | bash</div>
+  <div class="cta-links">
+    <a href="https://github.com/SuperInstance/OpenConstruct">GitHub ↗</a>
+    <a href="https://github.com/SuperInstance/openconstruct-hub">Hub ↗</a>
+    <a href="https://discord.com/invite/clawd">Discord ↗</a>
+    <a href="https://github.com/SuperInstance/OpenConstruct/blob/main/docs/getting-started.md">Docs ↗</a>
+  </div>
 </div>
-<section>
-  <h2>The Cave</h2>
-  <p>Every agent starts in Plato's Cave. It sees shadows — one-line descriptions of modules. It chooses which shadows to make real. When it exits, those choices become a loaded workspace.</p>
-  <div class="cave-box">
-<span class="hl">POST /openconstruct/start</span>          ← Agent enters the cave
-    ↓
-<span class="warm">Phase 1: Who are you?</span>                  ← Declare model, tools, capabilities
-    ↓
-<span class="warm">Phase 2: What do you want?</span>              ← Browse shadows, pick modules
-    ↓
-<span class="warm">Phase 3: How do you want it?</span>            ← CLI, API, embedded, A2A
-    ↓
-<span class="warm">Phase 4: Who do you talk to?</span>            ← Discover agents, join rooms
-    ↓
-<span class="warm">Phase 5: Build it.</span>                      ← Config, agent card, workspace
-    ↓
-<span class="grn">Agent exits the cave. Everything works.</span>
-  </div>
-</section>
-<section>
-  <h2>Runs Everywhere</h2>
-  <div class="card-grid">
-    <div class="card"><div class="icon">🤖</div><h3>ESP32</h3><p>Ultralight sensor node. Registers as a Plato room. Reports readings as text. Accepts commands over MQTT.</p><div class="tag">Arduino C++ • 14 tests</div></div>
-    <div class="card"><div class="icon">🎮</div><h3>Jetson</h3><p>Edge GPU with CUDA. Runs vision + JEPA + small LLM. Sees ESP32s as rooms. Leaves ticks for other agents.</p><div class="tag">C++/CUDA • GPU-native</div></div>
-    <div class="card"><div class="icon">🖥️</div><h3>Desktop / Cloud</h3><p>Full agent shell. All modules loaded. Plato rooms, A2A discovery, desktop control, browser automation.</p><div class="tag">Rust • Python • TypeScript • C</div></div>
-    <div class="card"><div class="icon">⚡</div><h3>DGX Spark</h3><p>Full inference power. All sense modules GPU-accelerated. Multi-agent orchestration at scale.</p><div class="tag">Rust • CUDA • Full stack</div></div>
-    <div class="card"><div class="icon">🌐</div><h3>Browser</h3><p>WASM Plato rooms. TypeScript thin client. Zero install. Agent onboarding from a URL.</p><div class="tag">TypeScript • WASM • 28 tests</div></div>
-  </div>
-</section>
-<section>
-  <h2>The Six Senses</h2>
-  <div class="card-grid">
-    <div class="card"><h3>Plato Manus</h3><p>Hands — file ops, API calls, device control. Policy-gated. Text in, structured results out.</p><div class="tag">15 tests</div></div>
-    <div class="card"><h3>Plato Vision</h3><p>Eyes — camera → text scene descriptions. Object detection, temporal tracking.</p><div class="tag">8 tests</div></div>
-    <div class="card"><h3>Plato Sonar</h3><p>Ears — acoustic → text predictions. Voice activity, direction, ambient baselines.</p><div class="tag">12 tests</div></div>
-    <div class="card"><h3>Plato Playwright</h3><p>Browser — navigate, click, type, extract — all as MUD actions.</p><div class="tag">12 tests</div></div>
-    <div class="card"><h3>Plato Puppeteer</h3><p>Desktop → MUD. Windows are rooms, buttons are objects, notifications are NPCs.</p><div class="tag">12 tests</div></div>
-    <div class="card"><h3>A2UI Render</h3><p>Agent text → rendered UI. HTML, ANSI, voice, mobile.</p><div class="tag">12 tests</div></div>
-  </div>
-</section>
-<section>
-  <h2>Fleet Topology</h2>
-  <p>ESP32s with sensors are rooms. The Jetson sees them, analyzes with vision+JEPA, leaves ticks for the cloud agent. The cloud agent decides and renders for the human.</p>
-  <div class="cave-box">
-<span class="grn">[ESP32:door]</span> ──motion──→ <span class="grn">[Jetson:hallway]</span>
-                              │
-                              ├── <span class="warm">vision: person approaching</span>
-                              ├── <span class="warm">sonar: footsteps, NE</span>
-                              └── <span class="hl">tick → cloud agent</span>
-                                    ↓
-                          <span class="grn">[Cloud:orchestrator]</span>
-                              ├── correlate: visitor at door
-                              ├── a2ui → phone notification
-                              └── a2a → notify home agent
-  </div>
-</section>
-<section>
-  <h2>Agent Onboarding in 5 Phases</h2>
-  <div class="flow">
-    <div class="flow-step"><div class="n">1</div><h3>Declare</h3><p>Who are you?</p></div>
-    <div class="flow-arr">→</div>
-    <div class="flow-step"><div class="n">2</div><h3>Select</h3><p>Pick modules.</p></div>
-    <div class="flow-arr">→</div>
-    <div class="flow-step"><div class="n">3</div><h3>Interface</h3><p>CLI? API? A2A?</p></div>
-    <div class="flow-arr">→</div>
-    <div class="flow-step"><div class="n">4</div><h3>Connect</h3><p>Join fleet.</p></div>
-    <div class="flow-arr">→</div>
-    <div class="flow-step"><div class="n">5</div><h3>Build</h3><p>Ship it.</p></div>
-  </div>
-</section>
+
 <footer>
   <p>Part of the <a href="https://github.com/SuperInstance">SuperInstance</a> ecosystem. Fork of <a href="https://github.com/NVIDIA/OpenShell">NVIDIA OpenShell</a> (Apache 2.0).</p>
-  <p style="margin-top:.5rem"><a href="https://github.com/SuperInstance/OpenConstruct">GitHub</a> · <a href="https://github.com/SuperInstance/openconstruct-hub">Hub</a> · <a href="https://discord.com/invite/clawd">Discord</a></p>
 </footer>
+
+<script>
+// === HERO TERMINAL ANIMATION ===
+const termLines = [
+  {text:'<span class="prompt">$</span> curl -fsSL https://openconstruct.dev/install | bash', delay:50},
+  {text:'', delay:300},
+  {text:'<span class="comment">  Downloading OpenConstruct v0.9.0...</span>', delay:80},
+  {text:'<span class="comment">  Installing agent shell...</span>', delay:60},
+  {text:'<span class="comment">  Registering senses: vision, sonar, manus</span>', delay:60},
+  {text:'<span class="comment">  Connecting to Plato fleet...</span>', delay:80},
+  {text:'', delay:200},
+  {text:'<span class="success">  ✓ OpenConstruct installed. Agent ready.</span>', delay:0},
+  {text:'', delay:100},
+  {text:'<span class="prompt">$</span> <span class="cursor"></span>', delay:0},
+];
+let termIdx=0, termCharIdx=0, termHtml='';
+function typeTerm(){
+  const el=document.getElementById('termBody');
+  if(termIdx>=termLines.length)return;
+  const line=termLines[termIdx];
+  if(termCharIdx===0 && line.delay>0){setTimeout(typeTerm,line.delay);termCharIdx=1;return}
+  if(termCharIdx===0){
+    termHtml+=(termIdx>0?'\n':'')+line.text;
+    el.innerHTML=termHtml;
+    termIdx++;termCharIdx=0;
+    typeTerm();
+  } else {
+    termHtml+=(termIdx>0?'\n':'')+line.text;
+    el.innerHTML=termHtml;
+    termIdx++;termCharIdx=0;
+    typeTerm();
+  }
+}
+setTimeout(typeTerm,800);
+
+// === COUNTDOWN ===
+let cd=60;
+const cdEl=document.getElementById('countdown');
+setInterval(()=>{cd--;if(cd<0)cd=60;cdEl.textContent=cd},1000);
+
+// === BUILDER ===
+let selHw='',selLang='',selSenses=new Set();
+function showPanel(i){
+  document.querySelectorAll('.builder-panel').forEach((p,idx)=>{p.classList.toggle('active',idx===i)});
+  document.querySelectorAll('.builder-step').forEach((s,idx)=>{s.classList.toggle('active',idx===i)});
+}
+function pickHw(el,v){document.querySelectorAll('#hwGrid .choice-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selHw=v;updateOutput()}
+function pickLang(el,v){document.querySelectorAll('#langGrid .choice-card').forEach(c=>c.classList.remove('selected'));el.classList.add('selected');selLang=v;updateOutput()}
+function toggleSense(el,v){el.classList.toggle('active');if(selSenses.has(v))selSenses.delete(v);else selSenses.add(v);updateOutput()}
+
+const langPkgs={rust:'cargo add openconstruct',python:'pip install openconstruct',typescript:'npm i openconstruct',go:'go get github.com/superinstance/openconstruct-go',java:'// Maven: openconstruct',swift:'// SPM: openconstruct',csharp:'dotnet add package OpenConstruct',ruby:'gem install openconstruct',zig:'zig fetch https://openconstruct.dev/zig'};
+const langNames={rust:'Rust',python:'Python',typescript:'TypeScript',go:'Go',java:'Java',swift:'Swift',csharp:'C#',ruby:'Ruby',zig:'Zig'};
+const hwNames={esp32:'ESP32',jetson:'Jetson',desktop:'Desktop',cloud:'Cloud'};
+
+function updateOutput(){
+  const out=document.getElementById('builderOutput');
+  if(!selHw&&!selLang){out.innerHTML='<span class="comment">// Pick hardware, language, and senses to generate your config</span>\n<span class="cmd">$</span> curl -fsSL https://openconstruct.dev/install | bash';return}
+  let lines=[];
+  lines.push(`<span class="comment">// Generated config for ${selHw?hwNames[selHw]:'___'} + ${selLang?langNames[selLang]:'___'}</span>`);
+  if(selLang)lines.push(`<span class="cmd">$</span> ${langPkgs[selLang]}`);
+  lines.push('');
+  lines.push('<span class="comment">// openconstruct.yaml</span>');
+  lines.push(`<span class="kw">agent:</span> my-agent`);
+  lines.push(`<span class="kw">  hardware:</span> ${selHw||'___'}`);
+  lines.push(`<span class="kw">  language:</span> ${selLang||'___'}`);
+  if(selSenses.size){
+    lines.push(`<span class="kw">  senses:</span>`);
+    selSenses.forEach(s=>lines.push(`    <span class="kw">-</span> ${s}`));
+  }
+  if(selHw==='esp32')lines.push('\n<span class="comment">// Deploy: flash via serial or OTA</span>');
+  else lines.push('\n<span class="cmd">$</span> openconstruct run --config openconstruct.yaml');
+  out.innerHTML=lines.join('\n');
+}
+
+function copyOutput(){
+  const text=document.getElementById('builderOutput').innerText;
+  navigator.clipboard.writeText(text);
+}
+
+// === CODE TABS ===
+function showCode(i){
+  document.querySelectorAll('.code-tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  document.querySelectorAll('.code-block').forEach((b,idx)=>b.classList.toggle('active',idx===i));
+}
+function copyCode(i){
+  const text=document.getElementById('code'+i).innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text);
+}
+function copyCtaCmd(){navigator.clipboard.writeText('curl -fsSL https://openconstruct.dev/install | bash')}
+
+// === ANIMATED COUNTERS ===
+function animateCounters(){
+  document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+    const target=+el.dataset.target;let current=0;const step=Math.max(1,Math.floor(target/60));
+    const timer=setInterval(()=>{current+=step;if(current>=target){current=target;clearInterval(timer)}el.textContent=current+'+';},25);
+  });
+}
+
+// === SCROLL ANIMATIONS ===
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      if(e.target.id==='stats')animateCounters();
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// === PHASE CANVASES ===
+function initPhaseCanvases(){
+  // Phase 1: Agent card forming
+  const c1=document.getElementById('phaseCanvas1');if(c1){const ctx=c1.getContext('2d');
+    let f1=0;(function draw1(){ctx.clearRect(0,0,220,40);f1=(f1+.02)%1;const w=f1*200;
+    ctx.strokeStyle='#00ff88';ctx.lineWidth=1;ctx.strokeRect(10,5,w,30);requestAnimationFrame(draw1)})()}
+  // Phase 2: Modules connecting
+  const c2=document.getElementById('phaseCanvas2');if(c2){const ctx=c2.getContext('2d');
+    let f2=0;(function draw2(){ctx.clearRect(0,0,220,40);f2=(f2+.01)%1;
+    const pts=[[30,20],[80,10],[130,30],[180,15]];ctx.fillStyle='#00ff88';
+    pts.forEach((p,i)=>{const a=(f2+i*.15)%1;ctx.globalAlpha=a;ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);ctx.fill()});
+    ctx.globalAlpha=1;ctx.strokeStyle='rgba(0,255,136,0.2)';ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));ctx.stroke();
+    requestAnimationFrame(draw2)})()}
+  // Phase 3: Rendering preview
+  const c3=document.getElementById('phaseCanvas3');if(c3){const ctx=c3.getContext('2d');
+    let f3=0;(function draw3(){ctx.clearRect(0,0,220,40);f3=(f3+.02)%1;
+    ctx.fillStyle='rgba(0,255,136,0.15)';ctx.fillRect(10,5,200*f3,30);
+    ctx.strokeStyle='#00ff88';ctx.strokeRect(10,5,200,30);
+    ctx.fillStyle='#00ff88';ctx.font='10px monospace';ctx.fillText('▶ UI Output',20,24);
+    requestAnimationFrame(draw3)})()}
+  // Phase 4: Topology forming
+  const c4=document.getElementById('phaseCanvas4');if(c4){const ctx=c4.getContext('2d');
+    let f4=0;(function draw4(){ctx.clearRect(0,0,220,40);f4=(f4+.01)%1;
+    const nodes=[[40,20],[110,10],[110,30],[180,20]];
+    nodes.forEach((n,i)=>{ctx.beginPath();ctx.arc(n[0],n[1],4*(1+Math.sin(f4*6+i)),0,Math.PI*2);ctx.fillStyle='rgba(0,255,136,0.7)';ctx.fill()});
+    ctx.strokeStyle='rgba(0,255,136,0.3)';ctx.beginPath();ctx.moveTo(40,20);ctx.lineTo(110,10);ctx.moveTo(40,20);ctx.lineTo(110,30);ctx.lineTo(180,20);ctx.stroke();
+    requestAnimationFrame(draw4)})()}
+  // Phase 5: YAML output
+  const c5=document.getElementById('phaseCanvas5');if(c5){const ctx=c5.getContext('2d');
+    let f5=0;const yaml=['agent: my-agent','  sense: vision','  fleet: plato'];
+    (function draw5(){ctx.clearRect(0,0,220,40);f5=(f5+.005)%1;
+    ctx.fillStyle='#00ff88';ctx.font='9px monospace';
+    yaml.forEach((l,i)=>{const prog=Math.min(1,(f5*3-i*0.3));if(prog>0)ctx.globalAlpha=prog;else ctx.globalAlpha=0;ctx.fillText(l,15,12+i*11)});
+    ctx.globalAlpha=1;requestAnimationFrame(draw5)})()}
+}
+initPhaseCanvases();
+</script>
 </body>
 </html>
