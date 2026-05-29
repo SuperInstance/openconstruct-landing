@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenConstruct — Any Agent, Any Hardware, Any Language</title>
+<style>
+  :root { --bg:#0a0a0f; --fg:#e8e8ed; --muted:#6b6b80; --accent:#7c5cfc; --accent2:#fc5c7c; --card:#12121a; --border:#1e1e2e; --green:#5cfc7c; --mono:'JetBrains Mono','Fira Code',monospace; --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6}
+  pre,code{font-family:var(--mono)}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 50%,rgba(124,92,252,.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 50%,rgba(252,92,124,.05) 0%,transparent 50%);animation:drift 20s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:rotate(0)}to{transform:rotate(3deg)}}
+  .hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;letter-spacing:-.02em;position:relative}
+  .hero h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .tagline{font-size:clamp(1rem,2vw,1.4rem);color:var(--muted);max-width:640px;margin-top:1rem;position:relative}
+  .stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;padding:3rem 2rem;text-align:center}
+  .stat .num{font-size:3rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .label{color:var(--muted);font-size:.9rem}
+  section{padding:4rem 2rem;max-width:1100px;margin:0 auto}
+  section h2{font-size:2rem;margin-bottom:1.5rem}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:2rem}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color .2s}
+  .card:hover{border-color:var(--accent)}
+  .card .icon{font-size:2rem;margin-bottom:.5rem}
+  .card h3{font-size:1.1rem;margin-bottom:.5rem}
+  .card p{color:var(--muted);font-size:.9rem}
+  .card .tag{color:var(--accent);font-family:var(--mono);font-size:.8rem;margin-top:.5rem}
+  .cave-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;font-family:var(--mono);font-size:.85rem;line-height:1.4;overflow-x:auto;color:var(--muted);margin:1.5rem 0}
+  .cave-box .hl{color:var(--accent)}.cave-box .warm{color:var(--accent2)}.cave-box .grn{color:var(--green)}
+  .flow{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem;justify-content:center}
+  .flow-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;flex:1;min-width:160px;max-width:200px;text-align:center}
+  .flow-step .n{font-size:2rem;font-weight:800;color:var(--accent)}
+  .flow-step h3{font-size:.95rem;margin:.5rem 0 .3rem}
+  .flow-step p{color:var(--muted);font-size:.8rem}
+  .flow-arr{display:flex;align-items:center;color:var(--muted);font-size:1.5rem}
+  footer{border-top:1px solid var(--border);padding:3rem 2rem;text-align:center;color:var(--muted);font-size:.85rem}
+  footer a{color:var(--fg)}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1><span>OpenConstruct</span></h1>
+  <p class="tagline">Any agent. Any hardware. Any language.<br>An agent walks into a cave, sees shadows of what's possible, and chooses what becomes real.</p>
+</div>
+<div class="stats">
+  <div class="stat"><div class="num">200+</div><div class="label">Repos</div></div>
+  <div class="stat"><div class="num">500+</div><div class="label">Tests</div></div>
+  <div class="stat"><div class="num">16</div><div class="label">Languages</div></div>
+  <div class="stat"><div class="num">6</div><div class="label">Senses</div></div>
+</div>
+<section>
+  <h2>The Cave</h2>
+  <p>Every agent starts in Plato's Cave. It sees shadows — one-line descriptions of modules. It chooses which shadows to make real. When it exits, those choices become a loaded workspace.</p>
+  <div class="cave-box">
+<span class="hl">POST /openconstruct/start</span>          ← Agent enters the cave
+    ↓
+<span class="warm">Phase 1: Who are you?</span>                  ← Declare model, tools, capabilities
+    ↓
+<span class="warm">Phase 2: What do you want?</span>              ← Browse shadows, pick modules
+    ↓
+<span class="warm">Phase 3: How do you want it?</span>            ← CLI, API, embedded, A2A
+    ↓
+<span class="warm">Phase 4: Who do you talk to?</span>            ← Discover agents, join rooms
+    ↓
+<span class="warm">Phase 5: Build it.</span>                      ← Config, agent card, workspace
+    ↓
+<span class="grn">Agent exits the cave. Everything works.</span>
+  </div>
+</section>
+<section>
+  <h2>Runs Everywhere</h2>
+  <div class="card-grid">
+    <div class="card"><div class="icon">🤖</div><h3>ESP32</h3><p>Ultralight sensor node. Registers as a Plato room. Reports readings as text. Accepts commands over MQTT.</p><div class="tag">Arduino C++ • 14 tests</div></div>
+    <div class="card"><div class="icon">🎮</div><h3>Jetson</h3><p>Edge GPU with CUDA. Runs vision + JEPA + small LLM. Sees ESP32s as rooms. Leaves ticks for other agents.</p><div class="tag">C++/CUDA • GPU-native</div></div>
+    <div class="card"><div class="icon">🖥️</div><h3>Desktop / Cloud</h3><p>Full agent shell. All modules loaded. Plato rooms, A2A discovery, desktop control, browser automation.</p><div class="tag">Rust • Python • TypeScript • C</div></div>
+    <div class="card"><div class="icon">⚡</div><h3>DGX Spark</h3><p>Full inference power. All sense modules GPU-accelerated. Multi-agent orchestration at scale.</p><div class="tag">Rust • CUDA • Full stack</div></div>
+    <div class="card"><div class="icon">🌐</div><h3>Browser</h3><p>WASM Plato rooms. TypeScript thin client. Zero install. Agent onboarding from a URL.</p><div class="tag">TypeScript • WASM • 28 tests</div></div>
+  </div>
+</section>
+<section>
+  <h2>The Six Senses</h2>
+  <div class="card-grid">
+    <div class="card"><h3>Plato Manus</h3><p>Hands — file ops, API calls, device control. Policy-gated. Text in, structured results out.</p><div class="tag">15 tests</div></div>
+    <div class="card"><h3>Plato Vision</h3><p>Eyes — camera → text scene descriptions. Object detection, temporal tracking.</p><div class="tag">8 tests</div></div>
+    <div class="card"><h3>Plato Sonar</h3><p>Ears — acoustic → text predictions. Voice activity, direction, ambient baselines.</p><div class="tag">12 tests</div></div>
+    <div class="card"><h3>Plato Playwright</h3><p>Browser — navigate, click, type, extract — all as MUD actions.</p><div class="tag">12 tests</div></div>
+    <div class="card"><h3>Plato Puppeteer</h3><p>Desktop → MUD. Windows are rooms, buttons are objects, notifications are NPCs.</p><div class="tag">12 tests</div></div>
+    <div class="card"><h3>A2UI Render</h3><p>Agent text → rendered UI. HTML, ANSI, voice, mobile.</p><div class="tag">12 tests</div></div>
+  </div>
+</section>
+<section>
+  <h2>Fleet Topology</h2>
+  <p>ESP32s with sensors are rooms. The Jetson sees them, analyzes with vision+JEPA, leaves ticks for the cloud agent. The cloud agent decides and renders for the human.</p>
+  <div class="cave-box">
+<span class="grn">[ESP32:door]</span> ──motion──→ <span class="grn">[Jetson:hallway]</span>
+                              │
+                              ├── <span class="warm">vision: person approaching</span>
+                              ├── <span class="warm">sonar: footsteps, NE</span>
+                              └── <span class="hl">tick → cloud agent</span>
+                                    ↓
+                          <span class="grn">[Cloud:orchestrator]</span>
+                              ├── correlate: visitor at door
+                              ├── a2ui → phone notification
+                              └── a2a → notify home agent
+  </div>
+</section>
+<section>
+  <h2>Agent Onboarding in 5 Phases</h2>
+  <div class="flow">
+    <div class="flow-step"><div class="n">1</div><h3>Declare</h3><p>Who are you?</p></div>
+    <div class="flow-arr">→</div>
+    <div class="flow-step"><div class="n">2</div><h3>Select</h3><p>Pick modules.</p></div>
+    <div class="flow-arr">→</div>
+    <div class="flow-step"><div class="n">3</div><h3>Interface</h3><p>CLI? API? A2A?</p></div>
+    <div class="flow-arr">→</div>
+    <div class="flow-step"><div class="n">4</div><h3>Connect</h3><p>Join fleet.</p></div>
+    <div class="flow-arr">→</div>
+    <div class="flow-step"><div class="n">5</div><h3>Build</h3><p>Ship it.</p></div>
+  </div>
+</section>
+<footer>
+  <p>Part of the <a href="https://github.com/SuperInstance">SuperInstance</a> ecosystem. Fork of <a href="https://github.com/NVIDIA/OpenShell">NVIDIA OpenShell</a> (Apache 2.0).</p>
+  <p style="margin-top:.5rem"><a href="https://github.com/SuperInstance/OpenConstruct">GitHub</a> · <a href="https://github.com/SuperInstance/openconstruct-hub">Hub</a> · <a href="https://discord.com/invite/clawd">Discord</a></p>
+</footer>
+</body>
+</html>
